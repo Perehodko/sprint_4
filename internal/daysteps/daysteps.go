@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"strconv"
 	"strings"	
-	"go1fl-4-sprint-final/internal/spentcalories"
+	"github.com/Yandex-Practicum/tracker/internal/spentcalories"
+	"log"
 )
 
 const (
@@ -63,18 +64,22 @@ func DayActionInfo(data string, weight, height float64) string {
 	steps, walkDuration, err := parsePackage(data)
 
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return ""
 	}
 
-	if steps < 1 {
+	if steps <= 1 {
 		return ""
 	}
 
 	distanseMeters := float64(steps) * float64(stepLength)
 	distanseKm := distanseMeters / mInKm
-	calories := spentcalories.WalkingSpentCalories(steps, weight, height, walkDuration)
-	dayActionInfo := fmt.Sprintf("Количество шагов: %v.\nДистанция составила %v км.\nВы сожгли %v ккал.", steps, distanseKm, calories) 
+	calories, err := spentcalories.WalkingSpentCalories(steps, weight, height, walkDuration)
+	if err != nil {
+		log.Println(err)
+		return ""
+	}
+	dayActionInfo := fmt.Sprintf("Количество шагов: %v.\nДистанция составила %.2f км.\nВы сожгли %.2f ккал.\n", steps, distanseKm, calories) 
 
 	return dayActionInfo
 }
