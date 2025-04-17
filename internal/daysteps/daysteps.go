@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"	
-
+	"go1fl-4-sprint-final/internal/spentcalories"
 )
 
 const (
@@ -17,6 +17,12 @@ const (
 
 //"678,0h50m"
 func parsePackage(data string) (int, time.Duration, error) {
+	var (
+		step int 
+		err error
+		walkDuration time.Duration
+	)
+
 	if data == "" {
 		return 0, 0, fmt.Errorf("empty input")
 	}
@@ -26,25 +32,23 @@ func parsePackage(data string) (int, time.Duration, error) {
 		return 0, 0, fmt.Errorf("invalid input")
 	}
 
-	stepCount := slices[0]
-	if stepCount == "" {
+	if slices[0] == "" {
 		return 0, 0, fmt.Errorf("empty step count")
 	}
 
-	if steps, err := strconv.Atoi(stepCount); err != nil {
+	if step, err = strconv.Atoi(slices[0]); err != nil {
 		return 0, 0, fmt.Errorf("invalid step count: %w", err)
 	}
 
-	if steps <= 0 {
+	if step <= 0 {
 		return 0, 0, fmt.Errorf("invalid steps")
 	}
 
-	duration := slices[1]
-	if duration == "" {
+	if slices[1] == "" {
 		return 0, 0, fmt.Errorf("empty duration")
 	}
 
-	if walkDuration, err := time.ParseDuration(duration); err != nil {
+	if walkDuration, err = time.ParseDuration(slices[1]); err != nil {
 		return 0, 0, fmt.Errorf("invalid duration: %w", err)
 	}
 
@@ -52,7 +56,7 @@ func parsePackage(data string) (int, time.Duration, error) {
 		return 0, 0, fmt.Errorf("invalid duration")
 	}
 
-	return steps, walkDuration, nil
+	return step, walkDuration, nil
 }
 
 func DayActionInfo(data string, weight, height float64) string {
